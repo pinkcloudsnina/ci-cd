@@ -1,9 +1,12 @@
-name: Commit validations
+name: Commit and Pull Request validations
 
 on:
   push:
     branches:
       - 'feature/*'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   validate-code:
