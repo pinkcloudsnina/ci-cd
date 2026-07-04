@@ -1,0 +1,29 @@
+name: Branch name validation
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo code
+        uses: actions/checkout@v4
+
+      - name: Check if branch name starts with feature/
+        run: |
+          echo "Current branch: $GITHUB_REF_NAME"
+          if [[ "$GITHUB_REF_NAME" =~ ^feature/ ]]; then
+            echo "Success. Branch name is valid"
+            exit 0
+          else
+            echo "Error. Development is only allowed in branches starting with 'feature/'"
+            echo "Use correct branch name for development"
+            exit 1
+          fi
