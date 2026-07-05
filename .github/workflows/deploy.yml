@@ -1,4 +1,4 @@
-name: Deployment Pipeline
+name: Deployment to GitHub Pages
 
 on:
   pull_request:
@@ -12,6 +12,8 @@ permissions:
 
 jobs:
   deploy:
+    environment: github-pages
+    url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
@@ -28,6 +30,9 @@ jobs:
 
       - name: Build app
         run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
