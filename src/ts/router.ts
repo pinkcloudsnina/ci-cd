@@ -6,6 +6,9 @@ import CatalogPage from './pages/catalog-page';
 import ErrorPage from './pages/error-page';
 import PlantPage from './pages/plant-page';
 
+const IS_PRODUCTION = window.location.hostname.includes('github.io');
+const BASE_PATH = IS_PRODUCTION ? '/ci-cd' : '';
+
 class Router {
   static catalogPage: CatalogPage;
   static cartPage: CartPage;
@@ -19,8 +22,17 @@ class Router {
     Router.errorPage = new ErrorPage(cart);
   }
 
-  static render(pathname: string) {
+  static getCleanPath(pathname: string): string {
+    if (IS_PRODUCTION && pathname.startsWith(BASE_PATH)) {
+      return pathname.slice(BASE_PATH.length) || '/';
+    }
+    return pathname;
+  }
+
+  static render(rawPathname: string) {
     // console.log('render:', pathname);
+    const pathname = Router.getCleanPath(rawPathname);
+
     switch (pathname) {
       case PagesList.catalogPage:
         Router.catalogPage.draw();
@@ -43,8 +55,9 @@ class Router {
   }
 
   static goTo(pageId: string) {
-    window.history.pushState({ pageId }, pageId, pageId);
-    Router.render(pageId);
+    const fullPath = `${BASE_PATH}${pageId}`;
+    window.history.pushState({ pageId }, pageId, fullPath);
+    Router.render(fullPath);
     window.scrollTo(0, 0);
   }
 
@@ -54,11 +67,13 @@ class Router {
       if (!link.classList.contains('link-changed')) {
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          if (
-            link instanceof HTMLAnchorElement &&
-            (new URL(link.href).pathname !== '/catalog' || new URL(window.location.href).pathname !== '/catalog')
-          ) {
-            Router.goTo(new URL(link.href).pathname);
+          if (link instanceof HTMLAnchorElement) {
+            const targetPath = new URL(link.href).pathname;
+            const currentPath = new URL(window.location.href).pathname;
+
+            if (Router.getCleanPath(targetPath) !== '/catalog' || Router.getCleanPath(currentPath) !== '/catalog') {
+              Router.goTo(Router.getCleanPath(targetPath));
+            }
           }
         });
         link.classList.add('link-changed');
