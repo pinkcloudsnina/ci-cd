@@ -4,12 +4,12 @@
   "description": "online-store",
   "main": "index.js",
   "scripts": {
-  "dev": "webpack serve --mode development --open",
-  "build": "rimraf dist && webpack --mode production",
-  "clear": "rimraf dist",
-  "lint": "eslint ./src --ext js,jsx,ts,tsx",
-  "lint:fix": "eslint ./src --ext js,jsx,ts,tsx --fix",
-  "test": "jest --config jest.config.js"
+    "dev": "webpack serve --mode development --open",
+    "build": "rimraf dist && webpack --mode production --env production",
+    "clear": "rimraf dist",
+    "lint": "eslint ./src --ext js,jsx,ts,tsx",
+    "lint:fix": "eslint ./src --ext js,jsx,ts,tsx --fix",
+    "test": "jest --config jest.config.js"
   },
   "repository": {
     "type": "git",
