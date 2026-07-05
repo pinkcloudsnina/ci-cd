@@ -17,6 +17,11 @@ class RangeInput {
     this.rangeInputMin = getExistentElement<HTMLInputElement>('.range-min', parentSelector);
     this.rangeInputMax = getExistentElement<HTMLInputElement>('.range-max', parentSelector);
     this.range = getExistentElement('.slider__progress', parentSelector);
+
+    this.priceInputMin.setAttribute('aria-label', 'Minimum value input');
+    this.priceInputMax.setAttribute('aria-label', 'Maximum value input');
+    this.rangeInputMin.setAttribute('aria-label', 'Minimum value slider');
+    this.rangeInputMax.setAttribute('aria-label', 'Maximum value slider');
   }
 
   validatePriceInput() {
