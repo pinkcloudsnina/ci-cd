@@ -35,6 +35,17 @@ class CatalogPage extends Page {
     const values: Products[] = data.products ? data.products : [];
     const filter = new Filter(values);
 
+    const filterContainer = document.querySelector('.filter');
+    if (filterContainer) {
+      const headings = filterContainer.querySelectorAll('h3');
+      headings.forEach((h3) => {
+        const h2 = document.createElement('h2');
+        h2.innerHTML = h3.innerHTML;
+        if (h3.className) h2.className = h3.className;
+        h3.parentNode?.replaceChild(h2, h3);
+      });
+    }
+
     try {
       filter.recoveryState(values);
     } catch (err) {

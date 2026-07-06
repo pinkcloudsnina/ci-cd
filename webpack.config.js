@@ -3,12 +3,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development';
 const devMode = mode === 'development';
 const target = devMode ? 'web' : 'browserslist';
 const devtool = devMode ? 'source-map' : undefined;
+const isProduction = process.argv.includes('production');
 
 module.exports = {
   mode,
@@ -17,7 +19,7 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: isProduction ? '/ci-cd/' : '/',
     clean: true,
     filename: '[name].[contenthash].js',
     assetModuleFilename: 'assets/[name][ext]',
@@ -31,6 +33,12 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.html',
+      filename: 'index.html',
+    }),
+
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+      filename: '404.html',
     }),
 
     new MiniCssExtractPlugin({
@@ -44,6 +52,38 @@ module.exports = {
         { from: 'src/assets', to: 'assets' },
         { from: 'src/data/plants', to: 'assets/img/plants' },
         { from: path.resolve(__dirname, '_redirects'), to: '' },
+      ],
+    }),
+
+    new ImageMinimizerPlugin({
+      minimizer: {
+        implementation: ImageMinimizerPlugin.sharpMinify,
+        options: {
+          encodeOptions: {
+            jpeg: {
+              quality: 75,
+              progressive: true,
+            },
+          },
+          resize: {
+            width: 820,
+            height: 820,
+            fit: 'cover',
+          },
+        },
+      },
+      generator: [
+        {
+          preset: 'webp',
+          implementation: ImageMinimizerPlugin.sharpGenerate,
+          options: {
+            encodeOptions: {
+              webp: {
+                quality: 75,
+              },
+            },
+          },
+        },
       ],
     }),
 
