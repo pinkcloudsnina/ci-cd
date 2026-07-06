@@ -60,11 +60,15 @@ module.exports = {
         implementation: ImageMinimizerPlugin.sharpMinify,
         options: {
           encodeOptions: {
-            // Сжимаем исходные JPG/JPEG файлы, делая их легкими
             jpeg: {
               quality: 75,
               progressive: true,
             },
+          },
+          resize: {
+            width: 820,
+            height: 820,
+            fit: 'cover',
           },
         },
       },
