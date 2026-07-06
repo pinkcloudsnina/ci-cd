@@ -21,6 +21,11 @@ class ProductCards {
       photoImg.src = `assets/img/${item.thumbnail}`;
       photoImg.alt = `${item.title} - ${item.type}`;
 
+      photoImg.width = 410;
+      photoImg.height = 410;
+      photoImg.loading = 'lazy';
+      photoImg.decoding = 'async';
+
       getExistentElement('.product__type', productCardClone).textContent = item.type;
       getExistentElement('.product__title', productCardClone).textContent = item.title;
       getExistentElement('.product__description', productCardClone).textContent = item.description;
