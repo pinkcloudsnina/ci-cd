@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development';
@@ -51,6 +52,34 @@ module.exports = {
         { from: 'src/assets', to: 'assets' },
         { from: 'src/data/plants', to: 'assets/img/plants' },
         { from: path.resolve(__dirname, '_redirects'), to: '' },
+      ],
+    }),
+
+    new ImageMinimizerPlugin({
+      minimizer: {
+        implementation: ImageMinimizerPlugin.sharpMinify,
+        options: {
+          encodeOptions: {
+            // Сжимаем исходные JPG/JPEG файлы, делая их легкими
+            jpeg: {
+              quality: 75,
+              progressive: true,
+            },
+          },
+        },
+      },
+      generator: [
+        {
+          preset: 'webp',
+          implementation: ImageMinimizerPlugin.sharpGenerate,
+          options: {
+            encodeOptions: {
+              webp: {
+                quality: 75,
+              },
+            },
+          },
+        },
       ],
     }),
 
