@@ -17,10 +17,9 @@ class ProductCards {
       const productCardClone: Node = productCardTemp.content.cloneNode(true);
       if (!isHTMLElement(productCardClone)) throw new Error(`Element is not HTMLElement!`);
 
-      getExistentElement(
-        '.product__photo',
-        productCardClone
-      ).style.backgroundImage = `url('assets/img/${item.thumbnail}')`;
+      const photoImg = getExistentElement<HTMLImageElement>('.product__img', productCardClone);
+      photoImg.src = `assets/img/${item.thumbnail}`;
+      photoImg.alt = `${item.title} - ${item.type}`;
 
       getExistentElement('.product__type', productCardClone).textContent = item.type;
       getExistentElement('.product__title', productCardClone).textContent = item.title;
